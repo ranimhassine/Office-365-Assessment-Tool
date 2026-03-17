@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entra Tenant Intelligence Report — 242be114-5533-4cc7-80f5-6d6c834e058f</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --ink:        #1c1917;
+  --ink-2:      #44403c;
+  --ink-3:      #78716c;
+  --paper:      #fafaf9;
+  --paper-2:    #f5f5f4;
+  --paper-3:    #e7e5e4;
+  --accent:     #92400e;
+  --accent-2:   #d97706;
+  --accent-3:   #fef3c7;
+  --ok:         #166534;
+  --ok-bg:      #dcfce7;
+  --warn:       #92400e;
+  --warn-bg:    #fef3c7;
+  --danger:     #991b1b;
+  --danger-bg:  #fee2e2;
+  --info:       #1e3a5f;
+  --info-bg:    #dbeafe;
+  --radius:     10px;
+  --shadow:     0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--ink);
+  color: #fff;
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-name { font-family: 'DM Serif Display', serif; font-size: 20px; letter-spacing: -.3px; }
+.brand-name em { font-style: italic; color: var(--accent-2); }
+.brand-sep { width: 1px; height: 20px; background: rgba(255,255,255,.2); }
+.brand-report { font-size: 13px; opacity: .6; font-weight: 300; }
+.topbar-meta { font-size: 12px; opacity: .5; }
+.conf-chip { background: #7f1d1d; color: #fecaca; border-radius: 4px; padding: 3px 9px; font-size: 11px; font-weight: 600; letter-spacing: .5px; }
+
+/* ── TABS ── */
+.tab-bar {
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--paper-3);
+  display: flex;
+  padding: 0 40px;
+  gap: 4px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+  margin-bottom: -1px;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab:hover:not(.active) { color: var(--ink-2); }
+
+/* ── LAYOUT ── */
+.page { max-width: 1320px; margin: 0 auto; padding: 36px 40px 60px; }
+.section { margin-bottom: 40px; }
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  letter-spacing: -.3px;
+  color: var(--ink);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--paper-3);
+  margin-left: 8px;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── CARDS ── */
+.card {
+  background: #fff;
+  border: 1px solid var(--paper-3);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+}
+.card-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+
+/* ── KPI GRID ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.kpi {
+  background: #fff;
+  border: 1px solid var(--paper-3);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent-2);
+}
+.kpi.kpi-green::before  { background: #16a34a; }
+.kpi.kpi-red::before    { background: #dc2626; }
+.kpi.kpi-blue::before   { background: #2563eb; }
+.kpi.kpi-purple::before { background: #7c3aed; }
+.kpi.kpi-orange::before { background: var(--accent-2); }
+.kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .7px; color: var(--ink-3); margin-bottom: 8px; }
+.kpi-value { font-size: 38px; font-weight: 300; line-height: 1; color: var(--ink); }
+.kpi-sub   { font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+
+/* ── TABLES ── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--paper-3); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--paper-2); }
+th { padding: 11px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--ink-3); text-align: left; border-bottom: 1px solid var(--paper-3); white-space: nowrap; }
+td { padding: 11px 16px; border-bottom: 1px solid var(--paper-2); color: var(--ink-2); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--paper); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.upn-cell { font-size: 12px; color: var(--ink-3); }
+.sku-part { font-size: 11px; color: var(--ink-3); margin-top: 2px; font-family: monospace; }
+
+/* ── BADGES ── */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: .3px; }
+.badge-ok   { background: var(--ok-bg);     color: var(--ok);     }
+.badge-warn { background: var(--warn-bg);   color: var(--warn);   }
+.badge-danger { background: var(--danger-bg); color: var(--danger); }
+.badge-info { background: var(--info-bg);   color: var(--info);   }
+
+/* ── ROLE BADGE ── */
+.role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--accent-3);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── PROGRESS BAR ── */
+.bar-wrap { display: inline-block; width: 80px; height: 6px; background: var(--paper-3); border-radius: 100px; vertical-align: middle; margin-right: 6px; }
+.bar-fill { height: 100%; border-radius: 100px; }
+.bar-pct  { font-size: 12px; color: var(--ink-3); }
+
+/* ── LICENCE DISTRIBUTION ── */
+.dist-grid { display: flex; flex-direction: column; gap: 10px; }
+.dist-row  { display: grid; grid-template-columns: 220px 1fr 50px; gap: 12px; align-items: center; }
+.dist-label { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink-2); }
+.dist-track { background: var(--paper-2); border-radius: 100px; height: 10px; }
+.dist-fill  { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 1s ease; }
+.dist-count { font-size: 13px; font-weight: 600; color: var(--ink); text-align: right; }
+
+/* ── USER TABLE CONTROLS ── */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; align-items: center; }
+.search-input, .filter-sel {
+  padding: 8px 13px;
+  border: 1px solid var(--paper-3);
+  border-radius: 7px;
+  background: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+}
+.search-input { width: 240px; }
+.search-input:focus, .filter-sel:focus { border-color: var(--accent-2); }
+.btn-export {
+  margin-left: auto;
+  padding: 8px 18px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-export:hover { background: var(--accent); }
+.row-count { font-size: 12px; color: var(--ink-3); margin-left: 4px; }
+
+/* ── OVERVIEW GRID ── */
+.overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.info-list { display: flex; flex-direction: column; gap: 0; }
+.info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--paper-2); font-size: 13px; }
+.info-row:last-child { border-bottom: none; }
+.info-key  { color: var(--ink-3); font-weight: 500; }
+.info-val  { color: var(--ink); font-weight: 400; text-align: right; }
+
+/* ── FOOTER ── */
+.footer { text-align: center; padding: 28px 0; color: var(--ink-3); font-size: 12px; border-top: 1px solid var(--paper-3); margin-top: 40px; }
+.footer strong { color: var(--ink-2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .topbar, .tab-bar, .page { padding-left: 16px; padding-right: 16px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .overview-grid { grid-template-columns: 1fr; }
+  .dist-row { grid-template-columns: 140px 1fr 40px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-name">Consultim<em>-IT</em></div>
+    <div class="brand-sep"></div>
+    <div class="brand-report">Entra Tenant Intelligence Report</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <span class="topbar-meta">242be114-5533-4cc7-80f5-6d6c834e058f &nbsp;·&nbsp; 2026-03-11 14:20:03</span>
+    <span class="conf-chip">CONFIDENTIAL</span>
+  </div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab active" onclick="showTab('overview',this)">🏢 Overview</button>
+  <button class="tab" onclick="showTab('licences',this)">🔑 Licences</button>
+  <button class="tab" onclick="showTab('users',this)">👥 Users</button>
+  <button class="tab" onclick="showTab('admins',this)">🛡 Admins</button>
+</nav>
+
+<main class="page">
+
+<!-- ═══════════════ OVERVIEW ═══════════════ -->
+<div id="panel-overview" class="tab-panel active">
+
+  <div class="kpi-grid">
+    <div class="kpi kpi-orange">
+      <div class="kpi-label">Total Users</div>
+      <div class="kpi-value" data-target="0">0</div>
+      <div class="kpi-sub">All account types</div>
+    </div>
+    <div class="kpi kpi-green">
+      <div class="kpi-label">Enabled Members</div>
+      <div class="kpi-value" data-target="">0</div>
+      <div class="kpi-sub">Active member accounts</div>
+    </div>
+    <div class="kpi kpi-blue">
+      <div class="kpi-label">Guest Users</div>
+      <div class="kpi-value" data-target="">0</div>
+      <div class="kpi-sub">External collaborators</div>
+    </div>
+    <div class="kpi kpi-red">
+      <div class="kpi-label">Disabled Accounts</div>
+      <div class="kpi-value" data-target="">0</div>
+      <div class="kpi-sub">Inactive accounts</div>
+    </div>
+    <div class="kpi kpi-purple">
+      <div class="kpi-label">Licensed Users</div>
+      <div class="kpi-value" data-target="">0</div>
+      <div class="kpi-sub">With ≥1 licence assigned</div>
+    </div>
+    <div class="kpi kpi-orange">
+      <div class="kpi-label">Unlicensed</div>
+      <div class="kpi-value" data-target="">0</div>
+      <div class="kpi-sub">No licence assigned</div>
+    </div>
+    <div class="kpi kpi-red">
+      <div class="kpi-label">Stale Accounts</div>
+      <div class="kpi-value" data-target="">0</div>
+      <div class="kpi-sub">No sign-in in 90 days</div>
+    </div>
+    <div class="kpi kpi-purple">
+      <div class="kpi-label">Admin Accounts</div>
+      <div class="kpi-value" data-target="0">0</div>
+      <div class="kpi-sub">Unique privileged users</div>
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="card">
+      <div class="card-label">Tenant Details</div>
+      <div class="info-list">
+        <div class="info-row"><span class="info-key">Organisation Name</span><span class="info-val">242be114-5533-4cc7-80f5-6d6c834e058f</span></div>
+        <div class="info-row"><span class="info-key">Tenant ID</span><span class="info-val" style="font-size:11px;font-family:monospace">242be114-5533-4cc7-80f5-6d6c834e058f</span></div>
+        <div class="info-row"><span class="info-key">Initial Domain</span><span class="info-val"></span></div>
+        <div class="info-row"><span class="info-key">Country</span><span class="info-val"></span></div>
+        <div class="info-row"><span class="info-key">Tenant Created</span><span class="info-val">—</span></div>
+        <div class="info-row"><span class="info-key">Verified Domains</span><span class="info-val">1</span></div>
+        <div class="info-row"><span class="info-key">Licence SKUs</span><span class="info-val">0</span></div>
+        <div class="info-row"><span class="info-key">Report Generated</span><span class="info-val">2026-03-11 14:20:03</span></div>
+        <div class="info-row"><span class="info-key">Scan Duration</span><span class="info-val">1m 49s</span></div>
+        <div class="info-row"><span class="info-key">Assessed By</span><span class="info-val">Ranim Hassine — Consultim-IT</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Verified Domains</div>
+      <div class="table-wrap" style="box-shadow:none;border:none">
+        <table>
+          <thead><tr><th>Domain</th><th>Type</th><th>Flags</th></tr></thead>
+          <tbody><tr><td></td><td></td><td></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ LICENCES ═══════════════ -->
+<div id="panel-licences" class="tab-panel">
+
+  <div class="section">
+    <div class="section-title">Subscription Summary</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Licence</th>
+            <th class="num">Assigned</th>
+            <th class="num">Total</th>
+            <th class="num">Available</th>
+            <th>Usage</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Users per Licence</div>
+    <div class="card">
+      <div class="dist-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ USERS ═══════════════ -->
+<div id="panel-users" class="tab-panel">
+  <div class="controls">
+    <input class="search-input" type="text" id="userSearch" placeholder="🔍 Search name, email, dept..." oninput="filterUsers()">
+    <select class="filter-sel" id="typeFilter" onchange="filterUsers()">
+      <option value="">All Types</option>
+      <option value="Member">Members</option>
+      <option value="Guest">Guests</option>
+    </select>
+    <select class="filter-sel" id="enabledFilter" onchange="filterUsers()">
+      <option value="">All Status</option>
+      <option value="Yes">Enabled</option>
+      <option value="No">Disabled</option>
+    </select>
+    <select class="filter-sel" id="licFilter" onchange="filterUsers()">
+      <option value="">All Licences</option>
+      <option value="licensed">Licensed</option>
+      <option value="unlicensed">Unlicensed</option>
+    </select>
+    <span class="row-count" id="rowCount"></span>
+    <button class="btn-export" onclick="exportUserCSV()">⬇ Export CSV</button>
+  </div>
+  <div class="table-wrap">
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email / UPN</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Department</th>
+          <th>Licences</th>
+          <th>Last Sign-In</th>
+        </tr>
+      </thead>
+      <tbody id="userTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMINS ═══════════════ -->
+<div id="panel-admins" class="tab-panel">
+  <div class="section">
+    <div class="section-title">Privileged Role Assignments</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Role</th><th>Name</th><th>UPN</th><th>Type</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Consultim-IT</strong> · Entra Tenant Intelligence Report v1.0.0 · consultim-it.com</p>
+  <p style="margin-top:4px">Generated by Ranim Hassine · 2026-03-11 14:20:03</p>
+  <p style="margin-top:4px;font-style:italic">This report is confidential. For internal use only.</p>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const USERS = [];
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── COUNTER ANIMATION ─────────────────────────────────────────────────────────
+function animateCounters() {
+  document.querySelectorAll('.kpi-value[data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target) || 0;
+    const start = Date.now();
+    const duration = 900;
+    const tick = () => {
+      const p = Math.min((Date.now() - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    tick();
+  });
+}
+
+// ── USER TABLE ────────────────────────────────────────────────────────────────
+let currentUsers = USERS;
+
+function renderUsers(rows) {
+  const tbody = document.getElementById('userTbody');
+  document.getElementById('rowCount').textContent = rows.length + ' of ' + USERS.length + ' users';
+  tbody.innerHTML = rows.map(u => {
+    const licBadge = u.licCount === 0
+      ? '<span class="badge badge-warn">None</span>'
+      : u.licences.split(' · ').map(l => '<span class="badge badge-info" style="margin:1px 2px;display:inline-block">' + l + '</span>').join('');
+    const typeBadge = u.type === 'Guest'
+      ? '<span class="badge badge-warn">Guest</span>'
+      : '<span class="badge badge-ok">Member</span>';
+    const enabledBadge = u.enabled === 'Yes'
+      ? '<span class="badge badge-ok">Enabled</span>'
+      : '<span class="badge badge-danger">Disabled</span>';
+    const lastSI = u.lastSignIn === 'Never'
+      ? '<span style="color:#9ca3af;font-style:italic">Never</span>'
+      : u.lastSignIn;
+    return '<tr>' +
+      '<td><strong>' + escHtml(u.name) + '</strong></td>' +
+      '<td class="upn-cell">' + escHtml(u.upn) + '</td>' +
+      '<td>' + typeBadge + '</td>' +
+      '<td>' + enabledBadge + '</td>' +
+      '<td>' + escHtml(u.dept) + '</td>' +
+      '<td style="max-width:320px">' + licBadge + '</td>' +
+      '<td style="white-space:nowrap">' + lastSI + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function filterUsers() {
+  const search  = document.getElementById('userSearch').value.toLowerCase();
+  const type    = document.getElementById('typeFilter').value;
+  const enabled = document.getElementById('enabledFilter').value;
+  const lic     = document.getElementById('licFilter').value;
+  currentUsers = USERS.filter(u => {
+    const matchS = !search  || u.name.toLowerCase().includes(search) || u.upn.toLowerCase().includes(search) || u.dept.toLowerCase().includes(search) || u.licences.toLowerCase().includes(search);
+    const matchT = !type    || u.type === type;
+    const matchE = !enabled || u.enabled === enabled;
+    const matchL = !lic     || (lic === 'licensed' ? u.licCount > 0 : u.licCount === 0);
+    return matchS && matchT && matchE && matchL;
+  });
+  renderUsers(currentUsers);
+}
+
+function exportUserCSV() {
+  const headers = ['Name','UPN','Type','Enabled','Department','Job Title','Licences','Last Sign-In'];
+  const rows = currentUsers.map(u =>
+    [u.name, u.upn, u.type, u.enabled, u.dept, u.title, u.licences, u.lastSignIn]
+      .map(v => '"' + (v||'').replace(/"/g,'""') + '"').join(',')
+  );
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'EntraUsers.csv';
+  a.click();
+}
+
+// ── DIST BAR ANIMATION ────────────────────────────────────────────────────────
+function animateDistBars() {
+  document.querySelectorAll('.dist-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0%';
+    setTimeout(() => { el.style.width = w; }, 300);
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  animateCounters();
+  renderUsers(USERS);
+  animateDistBars();
+});
+</script>
+</body>
+</html>

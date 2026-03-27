@@ -1,0 +1,315 @@
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>Office 365 Security Inspection Report - Consultim-IT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-powershell.min.js"></script>
+    <style>
+    :root {
+      --brand-gold: #C89434;
+      --brand-gold-light: #D4A853;
+      --brand-dark: #1A1C1E;
+      --brand-surface: #22252A;
+      --brand-surface2: #2C3038;
+      --brand-border: #383D45;
+      --brand-text: #E8EAF0;
+      --brand-muted: #8A8F9A;
+      --critical: #E53E3E;
+      --high: #ED8936;
+      --medium: #ECC94B;
+      --low: #48BB78;
+      --info: #A0AEC0;
+      --critical-bg: rgba(229,62,62,.12);
+      --high-bg: rgba(237,137,54,.12);
+      --medium-bg: rgba(236,201,75,.12);
+      --low-bg: rgba(72,187,120,.12);
+      --info-bg: rgba(160,174,192,.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--brand-dark); color: var(--brand-text); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; line-height: 1.6; }
+
+    /* COVER HEADER */
+    .cover-header { background: linear-gradient(135deg,#14161A 0%,#1E2228 50%,#14161A 100%); border-bottom: 3px solid var(--brand-gold); padding: 48px 64px 40px; position: relative; overflow: hidden; }
+    .cover-header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(200,148,52,.03) 40px,rgba(200,148,52,.03) 41px); pointer-events: none; }
+    .cover-header-inner { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+    .cover-logo { width: 160px; height: auto; }
+    .cover-title-block { text-align: right; }
+    .cover-eyebrow { font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 8px; }
+    .cover-title { font-family: 'Rajdhani', sans-serif; font-size: 42px; font-weight: 700; color: var(--brand-text); line-height: 1.1; }
+    .cover-title span { color: var(--brand-gold); }
+    .cover-subtitle { font-size: 13px; color: var(--brand-muted); margin-top: 8px; font-weight: 300; letter-spacing: 1px; }
+    .cover-meta { background: var(--brand-surface); border: 1px solid var(--brand-border); border-top: 3px solid var(--brand-gold); padding: 20px 64px; display: flex; gap: 48px; font-size: 12px; flex-wrap: wrap; }
+    .cover-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .cover-meta-label { font-family: 'Rajdhani', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); font-weight: 600; }
+    .cover-meta-value { color: var(--brand-text); font-weight: 500; }
+
+    /* LAYOUT */
+    .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 48px 64px; }
+    .section-heading { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: var(--brand-text); letter-spacing: 1px; margin: 48px 0 20px; padding-bottom: 10px; border-bottom: 1px solid var(--brand-border); display: flex; align-items: center; gap: 12px; }
+    .section-heading::before { content: ''; display: block; width: 4px; height: 22px; background: var(--brand-gold); border-radius: 2px; flex-shrink: 0; }
+
+    /* EXEC SUMMARY */
+    .execsum-card { background: var(--brand-surface); border: 1px solid var(--brand-border); border-left: 4px solid var(--brand-gold); border-radius: 6px; padding: 28px 32px; line-height: 1.8; color: #C8CCD8; font-size: 13.5px; }
+    .execsum-card b { color: var(--brand-text); font-weight: 600; }
+    .execsum-card a { color: var(--brand-gold-light); text-decoration: none; }
+
+    /* STAT PILLS */
+    .stat-row { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
+    .stat-pill { background: var(--brand-surface2); border: 1px solid var(--brand-border); border-radius: 8px; padding: 16px 24px; display: flex; flex-direction: column; gap: 4px; min-width: 110px; }
+    .stat-pill-num { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; }
+    .stat-pill-label { font-size: 11px; color: var(--brand-muted); text-transform: uppercase; letter-spacing: 1.5px; }
+
+    /* CHARTS */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+    .chart-card { background: var(--brand-surface); border: 1px solid var(--brand-border); border-radius: 8px; padding: 24px; }
+    .chart-card-title { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 16px; }
+    .chart-card canvas { max-height: 260px; }
+
+    /* FINDINGS TABLE */
+    .findings-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+    .findings-table th { background: var(--brand-surface2); border-bottom: 2px solid var(--brand-gold); padding: 12px 16px; text-align: left; font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); }
+    .findings-table td { padding: 10px 16px; border-bottom: 1px solid var(--brand-border); vertical-align: middle; color: #C8CCD8; }
+    .findings-table tr:hover td { background: var(--brand-surface2); }
+    .findings-table td:first-child { font-family: 'IBM Plex Mono', monospace; color: var(--brand-muted); font-size: 12px; width: 50px; text-align: center; }
+    .findings-table a { color: var(--brand-text); text-decoration: none; font-weight: 500; }
+    .findings-table a:hover { color: var(--brand-gold-light); }
+
+    /* SEVERITY BADGES */
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .badge-Critical { background: var(--critical-bg); color: var(--critical); border: 1px solid rgba(229,62,62,.3); }
+    .badge-High { background: var(--high-bg); color: var(--high); border: 1px solid rgba(237,137,54,.3); }
+    .badge-Medium { background: var(--medium-bg); color: var(--medium); border: 1px solid rgba(236,201,75,.3); }
+    .badge-Low { background: var(--low-bg); color: var(--low); border: 1px solid rgba(72,187,120,.3); }
+    .badge-Informational { background: var(--info-bg); color: var(--info); border: 1px solid rgba(160,174,192,.2); }
+
+    /* FINDING DETAIL CARDS */
+    .finding-card { background: var(--brand-surface); border: 1px solid var(--brand-border); border-radius: 8px; margin: 28px 0; overflow: hidden; }
+    .finding-card-header { padding: 18px 24px; background: var(--brand-surface2); border-bottom: 1px solid var(--brand-border); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .finding-card-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brand-muted); background: var(--brand-dark); border: 1px solid var(--brand-border); border-radius: 4px; padding: 2px 8px; flex-shrink: 0; }
+    .finding-card-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: var(--brand-text); flex: 1; }
+    .finding-card-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .finding-field { display: flex; flex-direction: column; gap: 6px; }
+    .finding-field.full-width { grid-column: 1 / -1; }
+    .finding-field-label { font-family: 'Rajdhani', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); }
+    .finding-field-value { color: #C8CCD8; font-size: 13px; line-height: 1.7; }
+    .finding-field-value a { color: var(--brand-gold-light); text-decoration: none; }
+
+    /* AFFECTED OBJECTS */
+    .affected-list { background: var(--brand-dark); border: 1px solid var(--brand-border); border-radius: 6px; padding: 12px 16px; list-style: none; max-height: 220px; overflow-y: auto; }
+    .affected-list li { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #A0A8B8; padding: 4px 0; border-bottom: 1px solid var(--brand-border); line-height: 1.5; }
+    .affected-list li:last-child { border-bottom: none; }
+    .affected-list li::before { content: '\25B8'; color: var(--brand-gold); margin-right: 8px; }
+
+    /* REFERENCES */
+    .refs-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .refs-list li::before { content: '\2192'; color: var(--brand-gold); margin-right: 8px; }
+    .refs-list a { color: var(--brand-gold-light); text-decoration: none; font-size: 13px; }
+    .refs-list a:hover { text-decoration: underline; }
+
+    /* CODE */
+    pre[class*="language-"] { background: var(--brand-dark) !important; border: 1px solid var(--brand-border); border-radius: 6px; font-size: 12px; margin: 0; }
+
+    /* APPENDIX TABLE */
+    #inspectors { width: 100%; border-collapse: collapse; font-size: 12px; }
+    #inspectors th, #inspectors td { border: 1px solid var(--brand-border); padding: 8px 12px; text-align: center; vertical-align: middle; color: #C8CCD8; }
+    #inspectors thead th { background: var(--brand-surface2); color: var(--brand-gold); font-family: 'Rajdhani', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; font-size: 11px; }
+    #inspectors tbody tr:hover td { background: var(--brand-surface2); }
+
+    /* FOOTER */
+    .report-footer { margin-top: 64px; padding: 24px 0; border-top: 1px solid var(--brand-border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--brand-muted); }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--brand-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--brand-border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--brand-gold); }
+    </style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover-header">
+  <div class="cover-header-inner">
+    <img class="cover-logo" src="data:image/png;base64,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" alt="Consultim-IT">
+    <div class="cover-title-block">
+      <div class="cover-eyebrow">Security Assessment Report</div>
+      <div class="cover-title">Office 365<br><span>Security Inspection</span></div>
+      <div class="cover-subtitle">365Inspect: Community Edition &nbsp;&middot;&nbsp; Consultim-IT</div>
+    </div>
+  </div>
+</div>
+<div class="cover-meta">
+  <div class="cover-meta-item"><span class="cover-meta-label">Organization</span><span class="cover-meta-value" id="orgName">&mdash;</span></div>
+  <div class="cover-meta-item"><span class="cover-meta-label">Report Date</span><span class="cover-meta-value" id="reportDate">&mdash;</span></div>
+  <div class="cover-meta-item"><span class="cover-meta-label">Prepared By</span><span class="cover-meta-value" id="preparedBy">&mdash;</span></div>
+  <div class="cover-meta-item"><span class="cover-meta-label">Total Findings</span><span class="cover-meta-value" id="totalFindings">&mdash;</span></div>
+</div>
+
+<div class="page-wrapper">
+
+<div class="section-heading">About This Report</div>
+<!--BEGIN_EXECSUM_TEMPLATE-->
+<div class="execsum-card">
+  This report was generated by <b>365Inspect: Community Edition</b>, the open-source Microsoft 365 / Office 365
+  assessment tool by <a href="https://soteria.io">Soteria &ndash; Security Solutions &amp; Advisory</a>.<br><br>
+  <b>Prepared for organization:</b><b> Contoso - M365x36063842</b><br/><br/><b>Prepared by:</b><b> admin@M365x36063842.onmicrosoft.com </b><br/><br/><b>Stats</b>:<br/> <b>0</b> opportunities for improvement identified from <b>1</b> points of inspection.<br/><br/>
+</div>
+<!--END_EXECSUM_TEMPLATE-->
+
+<!--BEGIN_CHART_TEMPLATE-->
+<div class="stat-row" id="statRow" style="display:none;">
+  <div class="stat-pill"><div class="stat-pill-num" id="critNum" style="color:var(--critical)">0</div><div class="stat-pill-label">Critical</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="highNum" style="color:var(--high)">0</div><div class="stat-pill-label">High</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="medNum" style="color:var(--medium)">0</div><div class="stat-pill-label">Medium</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="lowNum" style="color:var(--low)">0</div><div class="stat-pill-label">Low</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="infoNum" style="color:var(--info)">0</div><div class="stat-pill-label">Informational</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="totalNum" style="color:var(--brand-gold)">0</div><div class="stat-pill-label">Total</div></div>
+</div>
+
+<div class="section-heading">Risk Severity</div>
+<div class="charts-grid">
+  <div class="chart-card">
+    <div class="chart-card-title">Findings by Severity</div>
+    <canvas id="riskChart"></canvas>
+  </div>
+  <div class="chart-card">
+    <div class="chart-card-title">Risk Distribution by Area</div>
+    <canvas id="distChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+  var totalFindingsString = '0';
+  var totalFindings = parseInt(totalFindingsString);
+  var criticalCount = 0;
+  var highCount = 0;
+  var mediumCount = 0;
+  var lowCount = 0;
+  var infoCount = 0;
+
+  // Populate stat pills
+  document.getElementById('statRow').style.display = 'flex';
+  document.getElementById('critNum').textContent = criticalCount;
+  document.getElementById('highNum').textContent = highCount;
+  document.getElementById('medNum').textContent = mediumCount;
+  document.getElementById('lowNum').textContent = lowCount;
+  document.getElementById('infoNum').textContent = infoCount;
+  document.getElementById('totalNum').textContent = totalFindings;
+  document.getElementById('totalFindings').textContent = totalFindings + ' of ' + document.querySelectorAll('#inspectors tbody tr').length + ' inspected';
+  document.getElementById('reportDate').textContent = new Date().toISOString().split('T')[0];
+
+  // Update org/preparer from execsum if possible
+  var execsum = document.querySelector('.execsum-card');
+  if (execsum) {
+    var orgMatch = execsum.innerHTML.match(/Prepared for organization:<\/b><b>\s*(.*?)<\/b>/);
+    if (orgMatch) document.getElementById('orgName').textContent = orgMatch[1].trim();
+    var byMatch = execsum.innerHTML.match(/Prepared by:<\/b><b>\s*(.*?)<\/b>/);
+    if (byMatch) document.getElementById('preparedBy').textContent = byMatch[1].replace(/<[^>]+>/g,'').trim();
+  }
+
+  Chart.register(ChartDataLabels);
+  var ctx1 = document.getElementById('riskChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ['Critical','High','Medium','Low','Informational'],
+      datasets: [{
+        label: 'Findings',
+        backgroundColor: ['#E53E3E','#ED8936','#ECC94B','#48BB78','#A0AEC0'],
+        data: [criticalCount, highCount, mediumCount, lowCount, infoCount],
+        borderRadius: 4
+      }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: { anchor: 'end', align: 'end', color: '#E8EAF0', font: { size: 11, weight: 'bold', family: 'IBM Plex Mono' }, formatter: (v) => v }
+      },
+      scales: {
+        x: { grid: { color: '#383D45' }, ticks: { color: '#8A8F9A' }, border: { color: '#383D45' } },
+        y: { grid: { display: false }, ticks: { color: '#C8CCD8' } }
+      }
+    }
+  });
+
+  var ctx2 = document.getElementById('distChart').getContext('2d');
+  var distData = [0, 0, 0, 0, 0, 0, 0];
+  var distLabels = ['Exchange', 'SharePoint', 'Teams', 'Intune', 'Azure AD', 'Security Center', 'Tenant'];
+  var distColors = ['#C89434','#48BB78','#8E44AD','#ED8936','#E53E3E','#ECC94B','#A0AEC0'];
+  new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: distLabels,
+      datasets: [{ backgroundColor: distColors, data: distData, borderWidth: 2, borderColor: '#22252A' }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'left', labels: { color: '#C8CCD8', font: { family: 'IBM Plex Sans', size: 11 }, boxWidth: 12 } },
+        datalabels: { color: '#E8EAF0', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '', display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0 }
+      }
+    }
+  });
+</script>
+<!--END_CHART_TEMPLATE-->
+
+<div class="section-heading">Findings Summary</div>
+<table class="findings-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Finding Name</th>
+      <th>Inherent Risk</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!--BEGIN_FINDING_SHORT_REPEATER--><!--END_FINDING_SHORT_REPEATER-->
+  </tbody>
+</table>
+
+<div class="section-heading">Finding Details</div>
+<!--BEGIN_FINDING_LONG_REPEATER--><!--END_FINDING_LONG_REPEATER-->
+
+<!--BEGIN_APPENDIX-->
+<div class="section-heading">Appendix A: Executed Inspectors</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<table id="inspectors">
+  <thead>
+    <tr><th colspan="4" style="background-color:var(--brand-surface2);"><b>Inspectors Executed:</b></th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<script>
+var inspectorData = ",";
+var inspectors = inspectorData.split(",").filter(s => s.trim() !== "");
+var tableBody = document.querySelector("#inspectors tbody");
+for (var i = 0; i < inspectors.length; i += 4) {
+  var row = "<tr>";
+  for (var j = i; j < Math.min(i + 4, inspectors.length); j++) {
+    row += "<td>" + inspectors[j].trim() + "</td>";
+  }
+  while ((j - i) < 4) { row += "<td></td>"; j++; }
+  row += "</tr>";
+  tableBody.innerHTML += row;
+}
+</script>
+<!--END_APPENDIX-->
+
+<div class="report-footer">
+  <div>
+    <img src="data:image/png;base64,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" alt="Consultim-IT" style="width:90px;opacity:0.5;vertical-align:middle;margin-right:12px">
+    Consultim-IT &nbsp;&middot;&nbsp; Office 365 Security Inspection Report &nbsp;&middot;&nbsp; Confidential
+  </div>
+  <div>365Inspect: Community Edition</div>
+</div>
+
+</div><!-- end page-wrapper -->
+</body>
+</html>
